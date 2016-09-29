@@ -11,7 +11,7 @@ focusPlot = 0;
 ambiantSerialNum = 'S07408';
 FOV = 1; %degrees
 
-%% import white reference data for both devices 
+%% get white ref data
 w = importdata(whiteFileName,',',2);
 
 %get the white ref for d1 and d2
@@ -35,18 +35,18 @@ else
     d2WhiteTime = wt.data(2);
 end
 
-%% get the wavelengths of each device 
+%% get wavs
 wavs = csvread(mainDataFileName,0,10,[0 10 1 1033]);
 wav1 = wavs(1,:);
 
-%% import the dark reference 
+%% get dark ref
 d1Dark = csvread(d1DarkFileName,0,1);
 d2Dark = csvread(d2DarkFileName,0,1);
 
 d1Dark = d1Dark';
 d2Dark = d2Dark';
 
-%% read the data from the main file
+%% get main spectrum
 d = importdata(mainDataFileName,',',2);
 
 % get the samples 
@@ -59,7 +59,7 @@ disp('the number of total samples is: ');
 totalSamples = length(samples(:,1));
 disp(totalSamples);
 
-%% separate the samples in device 1 and device 2
+%% separate d1 from d2
 if strcmp(serialNums(1,1),ambiantSerialNum)
     d2 = samples(1:2:totalSamples,:);
     d1 = samples(2:2:totalSamples,:);
@@ -72,7 +72,7 @@ disp('the number of samples per device is: ');
 numSamples = totalSamples/2;
 disp(numSamples);
 
-%% get all samples to a baseline integration time
+%% calc samples baseline integration time
 d1 = d1/300;
 d2 = d2/300;
 
@@ -102,7 +102,7 @@ end
 %Normalised = Reflectance / Ambient
 
 
-%% graph the intensities (if focus plot is selected then only graph single spectrum)
+%% graph intensities
 figure(1);
 titleOfGraph = strcat('Intensity vs Wavelength for: ',mainDataFileName);
 title(titleOfGraph);
